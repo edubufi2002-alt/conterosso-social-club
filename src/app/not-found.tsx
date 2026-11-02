@@ -1,0 +1,1 @@
+export default function NotFound(){return <main className="container section"><p className="eyebrow">CONTEROSSO SOCIAL CLUB</p><h1>Questa pagina non c’è.</h1><p>Torniamo a incontrarci nella pagina iniziale.</p><a className="button" href="/">Torna alla home</a></main>}
