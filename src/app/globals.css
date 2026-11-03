@@ -23,3 +23,9 @@
 .about-art{background:#f2d898;color:var(--club-blue)}.about-art b{color:var(--club-ochre)}
 .footer .wordmark{color:inherit}.club-principles{line-height:1.65;margin:20px 0}
 @media(max-width:560px){.club-symbol{width:38px;height:38px}.wordmark{gap:5px}.wordmark>.brand-name{font-size:23px}}
+
+.programme-print{margin:2rem 0 4rem;padding:clamp(1rem,4vw,3rem);border:1px solid var(--line);background:var(--white)}
+.programme-print>p,.origin-story p{max-width:70ch;line-height:1.7}.programme-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:0 2rem}
+.programme-list article{display:grid;grid-template-columns:6rem 1fr;gap:.8rem;padding:1.1rem 0;border-top:1px solid var(--line)}
+.programme-list article>strong{color:var(--club-red)}.programme-list h3{margin:0;color:var(--club-blue);font-size:1.12rem}.programme-list p{font-size:.93rem;line-height:1.5;margin:.35rem 0}
+.origin-story{max-width:76ch;margin:4rem auto 0;border-top:3px solid var(--club-ochre);padding-top:2rem}.origin-story h3{color:var(--club-blue);margin:2rem 0 .5rem}.origin-story p{margin:.7rem 0}
