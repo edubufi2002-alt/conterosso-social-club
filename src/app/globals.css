@@ -29,3 +29,5 @@
 .programme-list article{display:grid;grid-template-columns:6rem 1fr;gap:.8rem;padding:1.1rem 0;border-top:1px solid var(--line)}
 .programme-list article>strong{color:var(--club-red)}.programme-list h3{margin:0;color:var(--club-blue);font-size:1.12rem}.programme-list p{font-size:.93rem;line-height:1.5;margin:.35rem 0}
 .origin-story{max-width:76ch;margin:4rem auto 0;border-top:3px solid var(--club-ochre);padding-top:2rem}.origin-story h3{color:var(--club-blue);margin:2rem 0 .5rem}.origin-story p{margin:.7rem 0}
+
+.membership-lockup{display:flex;align-items:center;gap:12px;position:relative;z-index:1}.membership-lockup img{width:clamp(46px,6vw,72px);height:auto;border-radius:50%;background:white}.membership-lockup b{letter-spacing:.12em;font-size:12px}.membership-card>div strong{font-size:clamp(18px,2.1vw,27px)}

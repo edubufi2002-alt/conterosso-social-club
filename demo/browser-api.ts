@@ -1,4 +1,5 @@
 /** Presentation sandbox. No network requests, credentials or server dependencies. */
+import {installProgramme} from '../src/lib/programme';
 import template from './seed.json';
 import {State,Account,record} from '../src/lib/model';
 import {availability,createBooking,cancelBooking,recordCash,checkin,processWaitlist,validMembership,confirmPayment,assertAdmin,assertManage} from '../src/lib/domain';
@@ -27,9 +28,10 @@ export function makeDemo(now=Date.now()):State{
  const add=(id:string,eventId:string,pids:string[],ownerId='user',paid=false)=>{const e=s.activities[eventId];const b=createBooking(s,{id,ownerId,activityId:eventId,occurrenceIds:[e.occurrences[0].id],participants:pids.map(pid=>({personId:pid,name:s.people[pid].name,surname:s.people[pid].surname})),method:'onsite',idempotencyKey:id,requestHash:id},now);if(paid&&b.totalCents)recordCash(s,id,b.totalCents,s.accounts.admin,'cash-'+id,now);return b};
  add('demo-jazz','jazz',['DEMO-UTENTE','guest-1']);add('demo-libri','libri',['guest-0'],'manager');add('demo-teatro','teatro',['guest-2','guest-3'],'manager',true);add('demo-foto','fotografia',['guest-4','guest-5'],'manager',true);
  for(const [eventId,n] of [['ceramica',12],['vinili',23]] as const){const pids=Array.from({length:n},(_,i)=>{const id=eventId+'-guest-'+i;s.people[id]={id,name:'Partecipante',surname:'Demo '+(i+1),cfCipher:'',membership:[]};return id});add('demo-'+eventId,eventId,pids,'manager',true)}
+ installProgramme(s.activities,now);
  return s;
 }
-function load(){if(memory)return memory;try{const raw=localStorage.getItem(KEY);if(raw)memory=JSON.parse(raw)}catch{}if(!memory)save(makeDemo());return memory!}
+function load(){if(memory)return memory;try{const raw=localStorage.getItem(KEY);if(raw)memory=JSON.parse(raw)}catch{}if(!memory)save(makeDemo());else installProgramme(memory.activities);return memory!}
 function publicView(s:State){return {activities:record(s.activities).filter(e=>e.status!=='draft').map(e=>({...e,occurrences:e.occurrences.map(o=>({...o,remaining:o.cancelled?0:Math.max(0,availability(s,e,[o.id],Date.now()))}))})),content:s.settings,mode:'demo',onlineReady:true,demoAccounts:demoProfiles}}
 function privateView(s:State,a:Account){const events=record(s.activities).filter(e=>a.role==='admin'||a.role==='manager'&&e.managers.includes(a.id));const ids=new Set(events.map(e=>e.id));const bookings=record(s.bookings).filter(b=>b.ownerId===a.id||ids.has(b.activityId));const pids=new Set(bookings.flatMap(b=>b.participants.map(p=>p.personId)));pids.add(a.cfKey);return {account:a,activities:events,bookings,people:record(s.people).filter(p=>a.role==='admin'||pids.has(p.id)).map(p=>({...p,active:validMembership(s,p.id,Date.now())})),waitlist:record(s.waitlist).filter(w=>w.ownerId===a.id||ids.has(w.activityId)),ledger:record(s.ledger).filter(l=>a.role==='admin'||l.bookingId&&ids.has(s.bookings[l.bookingId]?.activityId)),jobs:record(s.jobs).filter(j=>a.role==='admin'||j.bookingId&&ids.has(s.bookings[j.bookingId]?.activityId)),accounts:a.role==='admin'?record(s.accounts):[],settings:a.role==='user'?null:s.settings,audit:record(s.audit)}}
 export async function demoApi(path:string,d:any={}):Promise<any>{
